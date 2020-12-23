@@ -25,3 +25,4 @@ yarn-error.log*
 .eslintcache copy
 .eslintcache
 yarn.lock.bak
+yarn.lock
