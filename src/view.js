@@ -1,26 +1,19 @@
-import React, {useState} from 'react'
+import React from 'react'
+import { useSwipeable } from 'react-swipeable';
 import './styles.css';
 
 function View(prop) {
-  const delta = 30
-  const [origin, setOrigin] = useState(0)
+  // const delta = 30
+  // const [origin, setOrigin] = useState(0)
   const { word, next, prev } = prop
+  const handlers = useSwipeable({
+    onSwipedDown: e => { console.log('DOWN ...', e)},
+    onSwipedUp: e => { console.log('UP ...', e)},
+    onSwipedLeft: _ => next(),
+    onSwipedRight: _ => prev()
+  })
   return (
-    <div
-      className="app"
-      onMouseDown={e => setOrigin(e.offsetX)}
-      onMouseUp={e => {
-        const move = e.offsetX - origin
-        if (move > delta) {
-          if (move <= 0) {
-            next()
-            console.log('Do Next')
-          } else {
-            prev()
-            console.log('Do Prev')
-          }
-        }
-      }}>
+    <div className="app" { ...handlers } onClick={next} onDoubleClick={prev}>
       <header className="app-header">
         <p>
           {word}

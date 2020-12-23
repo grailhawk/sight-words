@@ -31,7 +31,7 @@ function App() {
     }}
     prev={_ => {
       let nIndex = index - 1
-      if (nIndex > 0) {
+      if (nIndex <= 0) {
         nIndex = words.length -1
       }
       setIndex(nIndex)
