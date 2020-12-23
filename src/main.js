@@ -2,6 +2,10 @@ import React, {useState} from 'react'
 import View from './view'
 import sightwords from './words'
 
+const TIMED_MODE = 'rapid_fire'
+const NORMAL_MODE = 'normal_mode'
+// the time in seconds used by the rapid fire mode
+const TIME = 20
 // the list of words to test the student on
 const words = setup(sightwords)
 
@@ -52,6 +56,13 @@ function prev (index) {
   return nIndex
 }
 
+function timer (update) {
+  const id = setInterval(_ => {
+    update()
+  }, 1000)
+  return _ => clearInterval(id)
+}
+
 /**
  * run the application
  */
@@ -59,6 +70,8 @@ function Main() {
   const [hits, setHits] = useState(0)
   const [misses, setMisses] = useState(0)
   const [index, setIndex] = useState(0)
+  const [time, setTime] = useState(0)
+  const [mode, setMode] = useState(NORMAL_MODE)
   const [status, setStatus] = useState('')
   const word = words[index]
   return <View
@@ -68,6 +81,30 @@ function Main() {
     status={status}
     hits={hits}
     misses={misses}
+    showTimer={mode === TIMED_MODE}
+    time={time/TIME * 100}
+    changeMode={_ => {
+      let end
+      if (mode === NORMAL_MODE) {
+        setMode(TIMED_MODE)
+        timer(_ => {
+          console.log('here')
+          let nt = time + 1
+          if (nt > TIME) {
+            setMisses(misses + 1)
+            setIndex(next(index))
+            setTime(0)
+          } else {
+            setTime(nt)
+          }
+        })
+      } else {
+        setMode(NORMAL_MODE)
+        if (end != null){
+          end()
+        }
+      }
+    }}
     next={_ => {
       setIndex(next(index))
       setStatus('Next')
