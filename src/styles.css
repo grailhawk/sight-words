@@ -16,6 +16,26 @@
   font-size: calc(10px + 20vmin);
 }
 
+.app-report {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.app-report-left,
+.app-report-center,
+.app-report-right {
+  margin: auto;
+}
+
 .app-link {
   color: #61dafb;
+}
+
+.bottom {
+  position: absolute;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.05);
+  min-height: 5em;
+  min-width: 100%;
 }
