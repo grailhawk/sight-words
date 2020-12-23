@@ -19,7 +19,7 @@ function setup (sightwords) {
     let i = Math.floor(Math.random() * w.length)
     // put the word in the new array
     ret.push(w[i])
-    // remove the word form the old aray
+    // remove the word form the old array
     w.splice(i, 1)
   }
 
