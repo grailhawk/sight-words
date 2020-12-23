@@ -9,8 +9,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 20vmin);
   color: white;
+}
+
+.app-header p {
+  font-size: calc(10px + 20vmin);
 }
 
 .app-link {

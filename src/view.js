@@ -5,7 +5,7 @@ import './styles.css';
 function View(prop) {
   // const delta = 30
   // const [origin, setOrigin] = useState(0)
-  const { word, next, prev } = prop
+  const { current, total, word, next, prev } = prop
   const handlers = useSwipeable({
     onSwipedDown: e => { console.log('DOWN ...', e)},
     onSwipedUp: e => { console.log('UP ...', e)},
@@ -13,8 +13,18 @@ function View(prop) {
     onSwipedRight: _ => prev()
   })
   return (
-    <div className="app" { ...handlers } onClick={next} onDoubleClick={prev}>
+    <div
+      { ...handlers }
+      className="app"
+      onClick={next}
+      onContextMenu={ e => {
+        e.preventDefault()
+        prev()
+      }}>
       <header className="app-header">
+        <div>
+          {current}/{total}
+        </div>
         <p>
           {word}
         </p>

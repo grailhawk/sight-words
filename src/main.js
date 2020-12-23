@@ -21,6 +21,8 @@ function App() {
   const [index, setIndex] = useState(0)
   const word = words[index]
   return <View
+    current={index + 1}
+    total={words.length}
     word={word}
     next={_ => {
       let nIndex = index + 1
