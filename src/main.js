@@ -1,4 +1,6 @@
-import React, {useState} from 'react'
+// Deploy on gitpage info here
+// https://dev.to/yuribenjamin/how-to-deploy-react-app-in-github-pages-2a1f
+import React, {useState, useEffect, useRef } from 'react'
 import View from './view'
 import sightwords from './words'
 
@@ -6,6 +8,7 @@ const TIMED_MODE = 'rapid_fire'
 const NORMAL_MODE = 'normal_mode'
 // the time in seconds used by the rapid fire mode
 const TIME = 20
+let time = 0
 // the list of words to test the student on
 const words = setup(sightwords)
 
@@ -70,7 +73,6 @@ function Main() {
   const [hits, setHits] = useState(0)
   const [misses, setMisses] = useState(0)
   const [index, setIndex] = useState(0)
-  const [time, setTime] = useState(0)
   const [mode, setMode] = useState(NORMAL_MODE)
   const [status, setStatus] = useState('')
   const word = words[index]
@@ -91,11 +93,12 @@ function Main() {
           console.log('here')
           let nt = time + 1
           if (nt > TIME) {
+            time = 0
             setMisses(misses + 1)
             setIndex(next(index))
-            setTime(0)
           } else {
-            setTime(nt)
+            time = nt
+            setStatus(nt)
           }
         })
       } else {
