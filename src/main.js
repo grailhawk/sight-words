@@ -7,10 +7,13 @@ import sightwords from './words'
 const TIMED_MODE = 'rapid_fire'
 const NORMAL_MODE = 'normal_mode'
 // the time in seconds used by the rapid fire mode
-const TIME = 20
+const TIME = 10
 let time = 0
 // the list of words to test the student on
 const words = setup(sightwords)
+
+// used to stop the rapid fire mode
+let stopRapidFire = null
 
 /**
  * used to randomize the list of sight words to prevent the studdent from expecting a given order
@@ -71,7 +74,7 @@ function timer (update) {
  */
 function Main() {
   const [hits, setHits] = useState(0)
-  const [misses, setMisses] = useState(0)
+  const [miss, setMiss] = useState(0)
   const [index, setIndex] = useState(0)
   const [mode, setMode] = useState(NORMAL_MODE)
   const [status, setStatus] = useState('')
@@ -82,19 +85,19 @@ function Main() {
     word={word}
     status={status}
     hits={hits}
-    misses={misses}
+    misses={miss}
     showTimer={mode === TIMED_MODE}
     time={time/TIME * 100}
     changeMode={_ => {
       let end
       if (mode === NORMAL_MODE) {
         setMode(TIMED_MODE)
-        timer(_ => {
+        stopRapidFire = timer(_ => {
           console.log('here')
           let nt = time + 1
           if (nt > TIME) {
             time = 0
-            setMisses(misses + 1)
+            setMiss(miss + 1)
             setIndex(next(index))
           } else {
             time = nt
@@ -103,9 +106,10 @@ function Main() {
         })
       } else {
         setMode(NORMAL_MODE)
-        if (end != null){
-          end()
-        }
+        stopRapidFire()
+        stopRapidFire = null
+        time = 0
+        setStatus('')
       }
     }}
     next={_ => {
@@ -122,13 +126,13 @@ function Main() {
       setStatus('Score')
     }}
     miss={ _ => {
-      setMisses(misses + 1)
+      setMiss(miss + 1)
       setIndex(next(index))
       setStatus('Miss')
     }}
     reset={ _ => {
       setHits(0)
-      setMisses(0)
+      setMiss(0)
       setIndex(0)
     }} />
 }

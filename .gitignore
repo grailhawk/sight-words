@@ -24,3 +24,4 @@ yarn-error.log*
 .vscode/settings.json
 .eslintcache
 yarn.lock
+debug.log
