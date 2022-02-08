@@ -1,6 +1,6 @@
 // Deploy on gitpage info here
 // https://dev.to/yuribenjamin/how-to-deploy-react-app-in-github-pages-2a1f
-import React, {useState, useEffect, useRef } from 'react'
+import React, { useState } from 'react'
 import View from './view'
 import sightwords from './words'
 
@@ -11,9 +11,6 @@ const TIME = 10
 let time = 0
 // the list of words to test the student on
 const words = setup(sightwords)
-
-// used to stop the rapid fire mode
-let stopRapidFire = null
 
 /**
  * used to randomize the list of sight words to prevent the studdent from expecting a given order
@@ -62,13 +59,6 @@ function prev (index) {
   return nIndex
 }
 
-function timer (update) {
-  const id = setInterval(_ => {
-    update()
-  }, 1000)
-  return _ => clearInterval(id)
-}
-
 /**
  * run the application
  */
@@ -79,6 +69,54 @@ function Main() {
   const [mode, setMode] = useState(NORMAL_MODE)
   const [status, setStatus] = useState('')
   const word = words[index]
+
+
+  function rapid (action) {
+    // used to stop the rapid fire mode
+    let stop = null
+
+    /**
+     * used to abstract setInterval functionality
+     * @param {func} update - interval callback
+     */
+    function timer (update) {
+      const id = setInterval(_ => {
+        update()
+      }, 1000)
+      return _ => clearInterval(id)
+    }
+
+    if (action === 'reset') {
+      rapid('stop')
+      rapid('start')
+    }
+  
+    if (action === 'stop') {
+      if (stop != null) {
+        stop()
+        stop = null
+        time = 0
+        setStatus('')
+      }
+    }
+
+    if (action == null || action === '' || action === 'start') {
+      stop = timer(_ => {
+        console.log('here')
+        let nt = time + 1
+        if (nt > TIME) {
+          time = 0
+          setMiss(miss + 1)
+          setIndex(next(index))
+        } else {
+          time = nt
+          setStatus(nt)
+        }
+      })  
+    }
+  }
+
+
   return <View
     current={index + 1}
     total={words.length}
@@ -89,27 +127,12 @@ function Main() {
     showTimer={mode === TIMED_MODE}
     time={time/TIME * 100}
     changeMode={_ => {
-      let end
       if (mode === NORMAL_MODE) {
         setMode(TIMED_MODE)
-        stopRapidFire = timer(_ => {
-          console.log('here')
-          let nt = time + 1
-          if (nt > TIME) {
-            time = 0
-            setMiss(miss + 1)
-            setIndex(next(index))
-          } else {
-            time = nt
-            setStatus(nt)
-          }
-        })
+        rapid('start')
       } else {
         setMode(NORMAL_MODE)
-        stopRapidFire()
-        stopRapidFire = null
-        time = 0
-        setStatus('')
+        rapid('stop')
       }
     }}
     next={_ => {
@@ -121,11 +144,17 @@ function Main() {
       setStatus("Prev")
     }}
     hit={ _ => {
+      if (mode === TIMED_MODE) {
+        rapid('reset')
+      }
       setHits(hits + 1)
       setIndex(next(index))
       setStatus('Score')
     }}
     miss={ _ => {
+      if (mode === TIMED_MODE) {
+        rapid('reset')
+      }
       setMiss(miss + 1)
       setIndex(next(index))
       setStatus('Miss')

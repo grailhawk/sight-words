@@ -15,7 +15,7 @@ function View(prop) {
     hit,       // func used to indicate that the player/student has gotten a word correctly
     misses,    // number of words the player/student has gotten wrong
     miss,      // func used to indicate that the player/student has gotten a word wrong
-    reset,     // fucn used to reset the Hits, Misses, and to go back to the first word.
+    reset,     // func used to reset the Hits, Misses, and to go back to the first word.
     showTimer, // show the timer
     changeMode,// Used to change the game mode form timed to normal
     time       // if game mode === timed then this is the time left before the end of the round
@@ -67,7 +67,7 @@ function View(prop) {
     <div>
       {status}
     </div>
-    <div className='bottom'>
+    {/* <div className='bottom'>
         <div>
           <div className='app-buttons'>
             <Button
@@ -97,7 +97,7 @@ function View(prop) {
         <div className='progress-div'>
           {prog}
         </div>
-    </div>
+    </div> */}
   </div>
 
   // render the view
