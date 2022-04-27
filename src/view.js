@@ -15,9 +15,11 @@ function View(prop) {
     hit,       // func used to indicate that the player/student has gotten a word correctly
     misses,    // number of words the player/student has gotten wrong
     miss,      // func used to indicate that the player/student has gotten a word wrong
+    defer,     // func used when the player/student says "I don't know"
     reset,     // func used to reset the Hits, Misses, and to go back to the first word.
     showTimer, // show the timer
     changeMode,// Used to change the game mode form timed to normal
+    showHelp,  // func used to show help text
     time       // if game mode === timed then this is the time left before the end of the round
   } = prop
 
@@ -36,23 +38,54 @@ function View(prop) {
       <Progress percent={time} inverted/>
     </Segment>
   }
-
-  let modeText = 'Start'
-  if (showTimer) {
-    modeText = 'End'
-  }
+  
   // Build t he view
   const view = <div
     { ...handlers }
     className="app-header"
-    onClick={next}
+    onClick={defer}
     onContextMenu={ e => {
       e.preventDefault()
       prev()
     }}>
-    <p>
+    <div className='app-report'>
+      <div className='app-report-left'>
+        <Button
+          className='app-button'
+          circular
+          icon='play'
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            reset()
+          }} />
+      </div>
+      <div className='app-report-center'>
+      </div>
+      <div className='app-report-right'>
+        <Button
+          className='app-button'
+          circular
+          icon='hourglass outline'
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            changeMode()
+          }} />
+        <Button
+          className='app-button'
+          circular
+          icon='help'
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            showHelp()
+          }} />
+      </div>
+    </div>
+    <div className='word'>
       {word}
-    </p>
+    </div>
     <div className='app-report'>
       <div className='app-report-left'>
         {hits}
@@ -67,37 +100,9 @@ function View(prop) {
     <div>
       {status}
     </div>
-    {/* <div className='bottom'>
-        <div>
-          <div className='app-buttons'>
-            <Button
-              fluid
-              onClick={e => {
-                e.preventDefault()
-                e.stopPropagation()
-                changeMode()
-              }}>
-              {modeText}
-            </Button>
-          </div>
-          <div className='on-right'>
-            <div className='app-buttons'>
-              <Button
-                fluid
-                onClick={e => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  reset()
-                }}>
-                  Reset
-              </Button>
-            </div>
-          </div>
-        </div>
-        <div className='progress-div'>
-          {prog}
-        </div>
-    </div> */}
+    <div className='progress-div'>
+      {prog}
+    </div>
   </div>
 
   // render the view

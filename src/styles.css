@@ -11,9 +11,19 @@
   justify-content: center;
   color: white;
 }
+.app-button {
+  background-color: white;
+  opacity: .5;
+}
 
 .app-header p {
   font-size: calc(10px + 20vmin);
+}
+
+.app-header div.word {
+  font-size: calc(10px + 20vmin);
+  margin: 1em 0 1em;
+  line-height: 1.4285em
 }
 
 .app-report {
@@ -42,6 +52,7 @@
 
 .progress-div {
   min-height: 5.2em;
+  width: 100%;
 }
 
 .app-buttons{
